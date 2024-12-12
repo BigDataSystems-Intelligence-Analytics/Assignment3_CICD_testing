@@ -1,0 +1,17 @@
+beautifulsoup4
+selenium
+python-dotenv
+Unidecode
+webdriver-manager
+snowflake-connector-python
+boto3
+streamlit
+pymupdf
+requests
+openpyxl
+llama-index-core==0.10.58
+llama-index-readers-file==0.1.30
+Pillow==10.4.0
+llama-index-embeddings-nvidia
+llama-index-embeddings-huggingface
+llama-index-vector-stores-milvus==0.1.20
