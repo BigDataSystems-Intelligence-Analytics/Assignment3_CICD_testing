@@ -2,6 +2,8 @@
 ## Multi-Modal RAG Application
 An interactive RAG based application built using FastAPI and Streamlit to explore and analyze publications from the CFA Institute Research Foundation. The application extract contents from the publications including images, graphs, PDF files and stores them in Snowflake database and Chroma DB. Users can interactively explore documents, generate on-the-fly summaries, and retrieve insights using multi-modal Retrieval-Augmented Generation (RAG) approach. This application supports robust Q/A functionality, incremental indexing of research notes, and comprehensive search within documents enhancing document discovery and analysis.
 
+testing 123
+
 
 ## Live Application Link
 - Streamlit application link: http://18.219.124.78:8501/
