@@ -1,0 +1,29 @@
+services:
+
+  fastapiservice:
+    build:
+      context: ./fastapi
+      dockerfile: Dockerfile
+    ports: 
+      - 8000:8000
+    env_file:
+      - ./fastapi/.env
+    networks:
+      - appnetwork
+
+  streamlitservice:
+    build:
+      context: ./streamlit
+      dockerfile: Dockerfile
+    ports: 
+      - 8501:8501
+    environment:
+      - HOSTNAME=fastapiservice
+    depends_on:
+      - fastapiservice
+    networks:
+      - appnetwork
+
+networks:
+  appnetwork:
+    driver: bridge
