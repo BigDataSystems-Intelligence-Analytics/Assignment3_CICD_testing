@@ -3,63 +3,67 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger on pushes to the main branch
+      - main
   pull_request:
     branches:
-      - main  # Trigger on pull requests to the main branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
-    # Step 3: Install dependencies
+    - name: Upgrade pip and dependencies
+      run: |
+        pip install --upgrade pip setuptools wheel
+
     - name: Install dependencies
       run: |
         pip install -r ./fastapi/requirements.txt
         pip install -r ./streamlit/requirements.txt
 
-    # Step 4: Run tests
+    - name: Check for dependency conflicts
+      run: |
+        pip check
+
+    - name: Show installed packages
+      run: |
+        pip list
+
     - name: Run tests
       run: |
         cd fastapi
-        pytest  # Adjust this based on your test framework
+        pytest
         cd ../streamlit
-        pytest  # If Streamlit has tests
+        pytest
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-    # Step 1: Check out the code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Log in to Docker Hub (if using Docker)
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # Step 3: Build and push Docker images
     - name: Build and push Docker images
       run: |
         docker-compose -f docker-compose.yml build
         docker-compose -f docker-compose.yml push
 
-    # Step 4: Deploy (to server or cloud service)
     - name: Deploy
       run: |
         ssh user@your-server "cd /path/to/project && docker-compose pull && docker-compose up -d"
