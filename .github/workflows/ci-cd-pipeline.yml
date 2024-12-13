@@ -13,31 +13,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Checkout code
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
+    # Step 3: Upgrade pip and essential tools
     - name: Upgrade pip and dependencies
       run: |
         pip install --upgrade pip setuptools wheel
 
+    # Step 4: Pre-install specific nltk version
+    - name: Pre-install compatible nltk version
+      run: |
+        pip install nltk==3.6.2  # Pinning to a compatible version
+
+    # Step 5: Install dependencies
     - name: Install dependencies
       run: |
         pip install -r ./fastapi/requirements.txt
         pip install -r ./streamlit/requirements.txt
 
+    # Step 6: Check for dependency conflicts
     - name: Check for dependency conflicts
       run: |
         pip check
 
+    # Step 7: Show installed packages
     - name: Show installed packages
       run: |
         pip list
 
+    # Step 8: Run tests
     - name: Run tests
       run: |
         cd fastapi
@@ -50,20 +62,24 @@ jobs:
     needs: build
 
     steps:
+    # Step 1: Checkout code
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Step 2: Log in to Docker Hub
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    # Step 3: Build and push Docker images
     - name: Build and push Docker images
       run: |
         docker-compose -f docker-compose.yml build
         docker-compose -f docker-compose.yml push
 
+    # Step 4: Deploy
     - name: Deploy
       run: |
         ssh user@your-server "cd /path/to/project && docker-compose pull && docker-compose up -d"
